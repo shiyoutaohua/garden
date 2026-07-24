@@ -1,0 +1,35 @@
+use axum::{
+    extract::{Path as PathVar, Query},
+    http::HeaderMap,
+    response::IntoResponse,
+};
+use p_core::model::result::base::BizResult;
+use std::collections::HashMap;
+use tracing::debug;
+
+pub(crate) struct BaseHandler;
+impl BaseHandler {
+    pub(crate) async fn greet() -> BizResult<String> {
+        debug!("f[greet] begin");
+        let app_name = "rose";
+        let reply = format!("Hey from {}", app_name);
+        debug!("f[greet] end");
+        BizResult::ok(reply)
+    }
+
+    pub(crate) async fn path(PathVar(key): PathVar<String>) -> impl IntoResponse {
+        key
+    }
+
+    pub(crate) async fn query(Query(map): Query<HashMap<String, String>>) -> impl IntoResponse {
+        format!("{:?}", map)
+    }
+
+    pub(crate) async fn headers(header_map: HeaderMap) -> impl IntoResponse {
+        BizResult::ok(format!("{:?}", header_map))
+    }
+
+    pub(crate) async fn post_text(body: String) -> impl IntoResponse {
+        BizResult::ok(body)
+    }
+}

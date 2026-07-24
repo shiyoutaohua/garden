@@ -1,0 +1,48 @@
+[workspace]
+resolver = '3'
+members = ["p-core", "p-daisy", "p-rose"]
+
+[workspace.package]
+version = "1.0.0"
+edition = "2024"
+
+[workspace.dependencies]
+tokio = { version = "1.53", features = ["full", "time"] }
+tokio-stream = "0.1"
+tokio-util = "0.7"
+tokio-metrics = "0.5"
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["local-time"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+axum = { version = "0.8", features = ["http2", "ws", "multipart"] }
+tower = "0.5"
+tower-http = { version = "0.7", features = [
+    "cors",
+    "trace",
+    "limit",
+    "request-id",
+    "timeout",
+    "compression-gzip",
+    "catch-panic",
+    "fs",
+] }
+time = { version = "0.3", features = ["formatting", "parsing", "serde"] }
+rustls = { version = "0.23", features = ["aws_lc_rs"] }
+ferroid = { version = "2.0", features = [
+    "std",
+    "alloc",
+    "snowflake",
+    "ulid",
+    "thread-local",
+    "atomic",
+    "base32",
+] }
+uuid = { version = "1.24", features = [
+    "v4",
+    "v7",
+    "fast-rng",
+    "macro-diagnostics",
+] }
+
+p-core = { path = "p-core" }

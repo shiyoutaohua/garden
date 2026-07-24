@@ -1,0 +1,23 @@
+[package]
+name = "p-rose"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+tokio.workspace = true
+tokio-stream.workspace = true
+tokio-util.workspace = true
+tokio-metrics.workspace = true
+tracing.workspace = true
+tracing-subscriber.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+axum.workspace = true
+tower.workspace = true
+tower-http.workspace = true
+time.workspace = true
+rustls.workspace = true
+ferroid.workspace = true
+uuid.workspace = true
+
+p-core.workspace = true
