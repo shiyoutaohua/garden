@@ -15,10 +15,10 @@ podman machine init --memory 4096 --cpus 4 --disk-size 100 podman-machine-defaul
 podman machine start
 podman machine list
 
-podman login --username=qingyuehanxi@insta insta-registry-vpc.cn-shanghai.cr.aliyuncs.com
-podman pull --platform linux/amd64 library/redis:8.6
-podman tag 1b2648a53018 insta-registry.cn-shanghai.cr.aliyuncs.com/public/redis:8.6
-podman push insta-registry.cn-shanghai.cr.aliyuncs.com/public/redis:8.6
+podman login --username=qingyuehanxi@insta insta-registry.cn-shanghai.cr.aliyuncs.com
+podman pull --platform linux/amd64 docker.1ms.run/alpine:3.23
+podman tag 0d3e09a185d9 insta-registry.cn-shanghai.cr.aliyuncs.com/public/alpine:3.23
+podman push insta-registry.cn-shanghai.cr.aliyuncs.com/public/alpine:3.23
 ```
 
 - Build
