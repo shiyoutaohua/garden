@@ -2,7 +2,7 @@ ARG WORKSPACE=garden
 ARG PKGNAME=garden-rose
 
 # --- 基础镜像(builder) ---
-FROM insta-registry-vpc.cn-shanghai.cr.aliyuncs.com/rust:1.96-alpine3.23 AS base-builder
+FROM insta-registry-vpc.cn-shanghai.cr.aliyuncs.com/public/rust:1.96-alpine3.23 AS base-builder
 
 ENV RUSTUP_UPDATE_ROOT=https://mirrors.aliyun.com/rustup/rustup
 ENV RUSTUP_DIST_SERVER=https://mirrors.aliyun.com/rustup
@@ -14,7 +14,7 @@ COPY .cargo/ /usr/local/cargo/
 RUN cargo install cargo-chef --locked
 
 # --- 基础镜像(runner) ---
-FROM insta-registry-vpc.cn-shanghai.cr.aliyuncs.com/alpine:3.23 AS base-runner
+FROM insta-registry-vpc.cn-shanghai.cr.aliyuncs.com/public/alpine:3.23 AS base-runner
 
 RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
 RUN apk add --no-cache ca-certificates
