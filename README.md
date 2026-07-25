@@ -16,7 +16,7 @@ podman machine start
 podman machine list
 
 podman login --username=qingyuehanxi@insta insta-registry.cn-shanghai.cr.aliyuncs.com
-podman pull --platform linux/amd64 docker.1ms.run/alpine:3.23
+podman pull --platform linux/amd64 alpine:3.23
 podman tag 0d3e09a185d9 insta-registry.cn-shanghai.cr.aliyuncs.com/public/alpine:3.23
 podman push insta-registry.cn-shanghai.cr.aliyuncs.com/public/alpine:3.23
 ```
