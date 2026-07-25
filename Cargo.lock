@@ -387,6 +387,71 @@ dependencies = [
 ]
 
 [[package]]
+name = "garden-core"
+version = "1.0.0"
+dependencies = [
+ "axum",
+ "ferroid",
+ "rustls",
+ "serde",
+ "serde_json",
+ "time",
+ "tokio",
+ "tokio-metrics",
+ "tokio-stream",
+ "tokio-util",
+ "tower",
+ "tower-http",
+ "tracing",
+ "tracing-subscriber",
+ "uuid",
+]
+
+[[package]]
+name = "garden-daisy"
+version = "1.0.0"
+dependencies = [
+ "axum",
+ "ferroid",
+ "garden-core",
+ "rustls",
+ "serde",
+ "serde_json",
+ "time",
+ "tokio",
+ "tokio-metrics",
+ "tokio-stream",
+ "tokio-util",
+ "tower",
+ "tower-http",
+ "tracing",
+ "tracing-subscriber",
+ "uuid",
+]
+
+[[package]]
+name = "garden-rose"
+version = "1.0.0"
+dependencies = [
+ "axum",
+ "ferroid",
+ "garden-core",
+ "rustls",
+ "serde",
+ "serde_json",
+ "time",
+ "tokio",
+ "tokio-metrics",
+ "tokio-stream",
+ "tokio-util",
+ "tower",
+ "tower-http",
+ "tracing",
+ "tracing-subscriber",
+ "uuid",
+]
+
+[[package]]
 name = "generic-array"
 version = "0.14.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -702,71 +767,6 @@ name = "once_cell"
 version = "1.21.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "9f7c3e4beb33f85d45ae3e3a1792185706c8e16d043238c593331cc7cd313b50"
-
-[[package]]
-name = "p-core"
-version = "1.0.0"
-dependencies = [
- "axum",
- "ferroid",
- "rustls",
- "serde",
- "serde_json",
- "time",
- "tokio",
- "tokio-metrics",
- "tokio-stream",
- "tokio-util",
- "tower",
- "tower-http",
- "tracing",
- "tracing-subscriber",
- "uuid",
-]
-
-[[package]]
-name = "p-daisy"
-version = "1.0.0"
-dependencies = [
- "axum",
- "ferroid",
- "p-core",
- "rustls",
- "serde",
- "serde_json",
- "time",
- "tokio",
- "tokio-metrics",
- "tokio-stream",
- "tokio-util",
- "tower",
- "tower-http",
- "tracing",
- "tracing-subscriber",
- "uuid",
-]
-
-[[package]]
-name = "p-rose"
-version = "1.0.0"
-dependencies = [
- "axum",
- "ferroid",
- "p-core",
- "rustls",
- "serde",
- "serde_json",
- "time",
- "tokio",
- "tokio-metrics",
- "tokio-stream",
- "tokio-util",
- "tower",
- "tower-http",
- "tracing",
- "tracing-subscriber",
- "uuid",
-]
 
 [[package]]
 name = "parking_lot"

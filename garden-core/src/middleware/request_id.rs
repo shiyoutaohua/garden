@@ -2,10 +2,7 @@ use crate::{constant::http::HEADER_REQUEST_ID, problem::biz::BizProblem, util::i
 use axum::{http::HeaderValue, middleware::Next, response::Response};
 use tracing::{Instrument, info_span, trace};
 
-pub async fn peek_request_id(
-    mut req: axum::extract::Request,
-    next: Next,
-) -> Result<Response, BizProblem> {
+pub async fn peek_request_id(mut req: axum::extract::Request, next: Next) -> Result<Response, BizProblem> {
     trace!("[f]peek_request_id begin");
     // complete x-request-id
     let rayid = req
@@ -17,8 +14,7 @@ pub async fn peek_request_id(
         .unwrap_or_else(UlidGenerator::next);
     req.headers_mut().insert(
         HEADER_REQUEST_ID,
-        HeaderValue::from_str(&rayid)
-            .expect(format!("{HEADER_REQUEST_ID} must be valid http header value").as_str()),
+        HeaderValue::from_str(&rayid).expect(format!("{HEADER_REQUEST_ID} must be valid http header value").as_str()),
     );
     // make request span
     let span = info_span!(
@@ -41,7 +37,5 @@ pub async fn peek_request_id(
 
 fn is_valid(s: &str) -> bool {
     const THRESHOLD: usize = 1024;
-    !s.is_empty()
-        && s.len() <= THRESHOLD
-        && s.chars().all(|c| c.is_ascii_alphanumeric() || c == '-')
+    !s.is_empty() && s.len() <= THRESHOLD && s.chars().all(|c| c.is_ascii_alphanumeric() || c == '-')
 }

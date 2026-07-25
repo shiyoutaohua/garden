@@ -2,7 +2,7 @@
 #![allow(async_fn_in_trait)]
 use crate::router::BaseRouter;
 use axum::{Router, extract::DefaultBodyLimit, http::StatusCode, middleware};
-use p_core::{
+use garden_core::{
     middleware::request_id::peek_request_id,
     util::app::{self, handler_404, handler_panic},
 };
@@ -35,10 +35,7 @@ fn main() {
         .with_max_level(Level::DEBUG)
         .with_thread_names(true)
         .with_line_number(true)
-        .with_timer(
-            tracing_subscriber::fmt::time::OffsetTime::local_rfc_3339()
-                .expect("can't get local offset"),
-        )
+        .with_timer(tracing_subscriber::fmt::time::OffsetTime::local_rfc_3339().expect("can't get local offset"))
         .init();
     let rt = tokio::runtime::Builder::new_multi_thread()
         .enable_all()
@@ -67,10 +64,7 @@ pub async fn init() {
             ServiceBuilder::new()
                 .layer(CatchPanicLayer::custom(handler_panic))
                 .layer(middleware::from_fn(peek_request_id))
-                .layer(
-                    TraceLayer::new_for_http()
-                        .make_span_with(|_: &axum::http::Request<_>| Span::none()),
-                )
+                .layer(TraceLayer::new_for_http().make_span_with(|_: &axum::http::Request<_>| Span::none()))
                 .layer(cors_layer.clone())
                 .layer(PropagateRequestIdLayer::x_request_id())
                 .layer(TimeoutLayer::with_status_code(
@@ -94,8 +88,5 @@ pub async fn init() {
     let res_addr = SocketAddr::new(Ipv6Addr::UNSPECIFIED.into(), 8081);
     info!("app listening on {}", app_addr);
     info!("res listening on {}", res_addr);
-    tokio::join!(
-        app::serve(app_router, app_addr),
-        app::serve(res_router, res_addr),
-    );
+    tokio::join!(app::serve(app_router, app_addr), app::serve(res_router, res_addr),);
 }

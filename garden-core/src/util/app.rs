@@ -16,9 +16,7 @@ pub async fn serve(router: Router, addr: SocketAddr) {
 
 pub async fn shutdown() {
     let ctrl_c = async {
-        signal::ctrl_c()
-            .await
-            .expect("failed to install Ctrl+C handler");
+        signal::ctrl_c().await.expect("failed to install Ctrl+C handler");
     };
 
     #[cfg(unix)]

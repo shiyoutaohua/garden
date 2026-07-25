@@ -1,6 +1,6 @@
 [workspace]
 resolver = '3'
-members = ["p-core", "p-daisy", "p-rose"]
+members = ["garden-core", "garden-daisy", "garden-rose"]
 
 [workspace.package]
 version = "1.0.0"
@@ -45,4 +45,4 @@ uuid = { version = "1.24", features = [
     "macro-diagnostics",
 ] }
 
-p-core = { path = "p-core" }
+garden-core = { path = "garden-core" }

@@ -1,0 +1,62 @@
+ARG WORKSPACE=garden
+ARG PKGNAME=garden-daisy
+
+# --- 基础镜像(builder) ---
+FROM docker.1ms.run/rust:1.96-alpine3.23 AS base-builder
+
+ENV RUSTUP_UPDATE_ROOT=https://mirrors.aliyun.com/rustup/rustup
+ENV RUSTUP_DIST_SERVER=https://mirrors.aliyun.com/rustup
+
+RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
+RUN apk add --no-cache musl-dev curl
+
+COPY .cargo/ /usr/local/cargo/
+RUN cargo install cargo-chef --locked
+
+# --- 基础镜像(runner) ---
+FROM docker.1ms.run/alpine:3.23 AS base-runner
+
+RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
+RUN apk add --no-cache ca-certificates
+
+# --- 依赖清单 ---
+FROM base-builder AS dept-recipe
+
+ARG WORKSPACE
+
+WORKDIR /app/${WORKSPACE}/
+COPY . .
+RUN cargo chef prepare --recipe-path recipe.json
+
+# --- 依赖缓存 ---
+FROM base-builder AS dept-cook
+
+ARG WORKSPACE
+
+WORKDIR /app/${WORKSPACE}/
+COPY --from=dept-recipe /app/${WORKSPACE}/recipe.json ./recipe.json
+RUN cargo chef cook --release --recipe-path recipe.json
+
+# --- 构建阶段 ---
+FROM dept-cook AS builder
+
+ARG WORKSPACE
+ARG PKGNAME
+
+WORKDIR /app/${WORKSPACE}/
+COPY . .
+RUN cargo b --release --bin ${PKGNAME}
+
+# --- 运行阶段 ---
+FROM base-runner
+
+ARG WORKSPACE
+ARG PKGNAME
+ENV PKGNAME=$PKGNAME
+
+WORKDIR /app/${WORKSPACE}/${PKGNAME}
+COPY --from=builder /app/${WORKSPACE}/target/release/${PKGNAME} ./${PKGNAME}
+COPY --from=builder /app/${WORKSPACE}/${PKGNAME}/res/ ./res/
+
+# CMD ["tail", "-f", "/dev/null"]
+CMD ["sh", "-c", "exec ./${PKGNAME}"]

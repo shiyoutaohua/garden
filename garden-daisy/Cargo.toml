@@ -1,5 +1,5 @@
 [package]
-name = "p-daisy"
+name = "garden-daisy"
 version.workspace = true
 edition.workspace = true
 
@@ -20,4 +20,4 @@ rustls.workspace = true
 ferroid.workspace = true
 uuid.workspace = true
 
-p-core.workspace = true
+garden-core.workspace = true
