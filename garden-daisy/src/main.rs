@@ -3,7 +3,7 @@
 use crate::router::BaseRouter;
 use axum::{Router, extract::DefaultBodyLimit, http::StatusCode, middleware};
 use garden_core::{
-    middleware::request_id::peek_request_id,
+    middleware::request_id::ensure_request_id,
     util::app::{self, handler_panic},
 };
 use rustls::crypto::aws_lc_rs;
@@ -62,7 +62,7 @@ pub async fn init() {
         .layer(
             ServiceBuilder::new()
                 .layer(CatchPanicLayer::custom(handler_panic))
-                .layer(middleware::from_fn(peek_request_id))
+                .layer(middleware::from_fn(ensure_request_id))
                 .layer(TraceLayer::new_for_http().make_span_with(|_: &axum::http::Request<_>| Span::none()))
                 .layer(cors_layer.clone())
                 .layer(PropagateRequestIdLayer::x_request_id())

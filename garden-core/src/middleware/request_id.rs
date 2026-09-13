@@ -1,11 +1,10 @@
 use crate::{constant::http::HEADER_REQUEST_ID, problem::biz::BizProblem, util::id::UlidGenerator};
 use axum::{http::HeaderValue, middleware::Next, response::Response};
-use tracing::{Instrument, info_span, trace};
+use tracing::{Instrument, debug, info_span};
 
-pub async fn peek_request_id(mut req: axum::extract::Request, next: Next) -> Result<Response, BizProblem> {
-    trace!("[f]peek_request_id begin");
-    // complete x-request-id
-    let rayid = req
+pub async fn ensure_request_id(mut req: axum::extract::Request, next: Next) -> Result<Response, BizProblem> {
+    // ensure
+    let reqid = req
         .headers()
         .get(HEADER_REQUEST_ID)
         .and_then(|v| v.to_str().ok())
@@ -14,7 +13,7 @@ pub async fn peek_request_id(mut req: axum::extract::Request, next: Next) -> Res
         .unwrap_or_else(UlidGenerator::next);
     req.headers_mut().insert(
         HEADER_REQUEST_ID,
-        HeaderValue::from_str(&rayid).expect(format!("{HEADER_REQUEST_ID} must be valid http header value").as_str()),
+        HeaderValue::from_str(&reqid).expect(format!("{HEADER_REQUEST_ID} must be valid http header value").as_str()),
     );
     // make request span
     let span = info_span!(
@@ -22,13 +21,13 @@ pub async fn peek_request_id(mut req: axum::extract::Request, next: Next) -> Res
         method = %req.method(),
         uri = %req.uri(),
         version = ?req.version(),
-        rayid = %rayid
+        rayid = %reqid
     );
     async move {
+        debug!("ensure {HEADER_REQUEST_ID} done");
         // call next service
         let response = next.run(req).await;
         // do something with `response`...
-        trace!("finished build request context");
         Ok(response)
     }
     .instrument(span)
