@@ -38,7 +38,7 @@ ferroid = { version = "2.0", features = [
     "atomic",
     "base32",
 ] }
-uuid = { version = "1.24", features = [
+uuid = { version = "1.26", features = [
     "v4",
     "v7",
     "fast-rng",
