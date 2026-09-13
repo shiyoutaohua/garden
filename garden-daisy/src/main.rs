@@ -63,7 +63,7 @@ pub async fn init() {
             ServiceBuilder::new()
                 .layer(CatchPanicLayer::custom(handler_panic))
                 .layer(middleware::from_fn(ensure_request_id))
-                .layer(TraceLayer::new_for_http().make_span_with(|_: &axum::http::Request<_>| Span::none()))
+                .layer(TraceLayer::new_for_http().make_span_with(|_: &axum::http::Request<_>| Span::current()))
                 .layer(cors_layer.clone())
                 .layer(PropagateRequestIdLayer::x_request_id())
                 .layer(TimeoutLayer::with_status_code(
