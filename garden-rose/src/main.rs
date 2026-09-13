@@ -3,12 +3,14 @@
 use crate::router::BaseRouter;
 use axum::{Router, extract::DefaultBodyLimit, http::StatusCode, middleware};
 use garden_core::{
+    cfg::cfg_prefix,
     middleware::request_id::ensure_request_id,
     util::app::{self, handler_panic},
 };
 use rustls::crypto::aws_lc_rs;
 use std::{
     net::{Ipv4Addr, SocketAddr},
+    path::PathBuf,
     sync::atomic::{AtomicU64, Ordering},
     time::Duration,
 };
@@ -23,10 +25,12 @@ use tower_http::{
 };
 use tracing::{Level, Span, info};
 
+pub mod cfg;
 pub mod handler;
 pub mod router;
 
 fn main() {
+    cfg_prefix(PathBuf::from("garden-rose")).unwrap();
     aws_lc_rs::default_provider()
         .install_default()
         .expect("failed to install rustls aws-lc-rs crypto provider");
@@ -73,7 +77,7 @@ pub async fn init() {
                 .layer(DefaultBodyLimit::max(30 * 1024 * 1024))
                 .layer(CompressionLayer::new()),
         );
-    let app_addr = SocketAddr::new(Ipv4Addr::UNSPECIFIED.into(), 8080);
+    let app_addr = SocketAddr::new(Ipv4Addr::UNSPECIFIED.into(), cfg::app::port());
     info!("app listening on {}", app_addr);
     tokio::join!(app::serve(app_router, app_addr),);
 }

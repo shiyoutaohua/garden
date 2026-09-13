@@ -1,3 +1,4 @@
 [app]
 name = "garden-daisy"
 machine_id = 0
+port = 7500

@@ -49,10 +49,12 @@ podman-compose -f .docker/docker-compose.yml --profile app down -v
 
 ### Cmd
 
-- make some file
+- util
 
 ```sh
 dd if=/dev/random of=./tmp.bin bs=10M count=1
+find . -name '.DS_Store' -type f -delete
+find . -name '__MACOSX' -type d -exec rm -rf {} +
 ```
 
 - 7z archive

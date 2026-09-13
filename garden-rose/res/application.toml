@@ -1,3 +1,4 @@
 [app]
 name = "garden-rose"
-machine_id = 2
+machine_id = 1
+port = 7600
