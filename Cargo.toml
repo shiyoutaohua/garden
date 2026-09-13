@@ -44,5 +44,6 @@ uuid = { version = "1.26", features = [
     "fast-rng",
     "macro-diagnostics",
 ] }
+config = "0.15"
 
 garden-core = { path = "garden-core" }

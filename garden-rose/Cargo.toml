@@ -19,5 +19,6 @@ time.workspace = true
 rustls.workspace = true
 ferroid.workspace = true
 uuid.workspace = true
+config.workspace = true
 
 garden-core.workspace = true
