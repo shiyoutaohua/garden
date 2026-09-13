@@ -4,11 +4,11 @@ use crate::router::BaseRouter;
 use axum::{Router, extract::DefaultBodyLimit, http::StatusCode, middleware};
 use garden_core::{
     middleware::request_id::peek_request_id,
-    util::app::{self, handler_404, handler_panic},
+    util::app::{self, handler_panic},
 };
 use rustls::crypto::aws_lc_rs;
 use std::{
-    net::{Ipv4Addr, Ipv6Addr, SocketAddr},
+    net::{Ipv4Addr, SocketAddr},
     sync::atomic::{AtomicU64, Ordering},
     time::Duration,
 };
@@ -18,7 +18,6 @@ use tower_http::{
     compression::CompressionLayer,
     cors::{AllowCredentials, AllowHeaders, AllowMethods, AllowOrigin, CorsLayer},
     request_id::PropagateRequestIdLayer,
-    services::ServeDir,
     timeout::TimeoutLayer,
     trace::TraceLayer,
 };
@@ -71,22 +70,10 @@ pub async fn init() {
                     StatusCode::REQUEST_TIMEOUT,
                     Duration::from_secs(30),
                 ))
-                .layer(DefaultBodyLimit::max(500 * 1024 * 1024))
+                .layer(DefaultBodyLimit::max(30 * 1024 * 1024))
                 .layer(CompressionLayer::new()),
         );
-    // curl http://localhost:8081/res/application.toml
-    let res_router = Router::new()
-        .nest_service("/res", ServeDir::new("res"))
-        .fallback(handler_404)
-        .layer(
-            ServiceBuilder::new()
-                .layer(TraceLayer::new_for_http())
-                .layer(cors_layer),
-        );
-
     let app_addr = SocketAddr::new(Ipv4Addr::UNSPECIFIED.into(), 8080);
-    let res_addr = SocketAddr::new(Ipv6Addr::UNSPECIFIED.into(), 8081);
     info!("app listening on {}", app_addr);
-    info!("res listening on {}", res_addr);
-    tokio::join!(app::serve(app_router, app_addr), app::serve(res_router, res_addr),);
+    tokio::join!(app::serve(app_router, app_addr),);
 }
