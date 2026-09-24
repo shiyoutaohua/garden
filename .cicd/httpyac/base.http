@@ -1,0 +1,7 @@
+@host = http://localhost:7500
+
+###
+GET {{host}}/
+
+###
+GET {{host}}/healthz

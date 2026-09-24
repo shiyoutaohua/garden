@@ -9,6 +9,7 @@ impl BaseRouter {
     pub(crate) fn routes() -> Router {
         Router::new()
             .route("/", get(BaseHandler::greet))
+            .route("/healthz", get(BaseHandler::healthz))
             .route("/path/{key}", get(BaseHandler::path))
             .route("/query", get(BaseHandler::query))
             .route("/headers", get(BaseHandler::headers))

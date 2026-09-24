@@ -1,9 +1,10 @@
 use axum::{
+    Json,
     extract::{Path as PathVar, Query},
     http::HeaderMap,
     response::IntoResponse,
 };
-use garden_core::model::result::base::BizResult;
+use garden_core::model::result::{base::BizResult, metrics::AppMetrics};
 use std::collections::HashMap;
 use tracing::debug;
 
@@ -15,6 +16,15 @@ impl BaseHandler {
         let reply = format!("Hey from {}", app_name);
         debug!("f[greet] end");
         BizResult::ok(reply)
+    }
+
+    pub(crate) async fn healthz() -> impl IntoResponse {
+        let metrics = AppMetrics {
+            uptime: 1,
+            start_ts: 1,
+            start_iso: String::new(),
+        };
+        Json(metrics)
     }
 
     pub(crate) async fn path(PathVar(key): PathVar<String>) -> impl IntoResponse {
