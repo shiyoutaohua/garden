@@ -7,7 +7,6 @@ use garden_core::{
     middleware::request_id::ensure_request_id,
     util::app::{self, handler_panic},
 };
-use rustls::crypto::aws_lc_rs;
 use std::{
     net::{Ipv4Addr, SocketAddr},
     path::PathBuf,
@@ -31,9 +30,6 @@ pub mod router;
 
 fn main() {
     cfg_prefix(PathBuf::from("garden-daisy")).unwrap();
-    aws_lc_rs::default_provider()
-        .install_default()
-        .expect("failed to install rustls aws-lc-rs crypto provider");
     tracing_subscriber::fmt()
         .with_max_level(Level::DEBUG)
         .with_thread_names(true)

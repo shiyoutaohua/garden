@@ -28,7 +28,6 @@ tower-http = { version = "0.7", features = [
     "fs",
 ] }
 time = { version = "0.3", features = ["formatting", "parsing", "serde"] }
-rustls = { version = "0.23", features = ["aws_lc_rs"] }
 ferroid = { version = "2.0", features = [
     "std",
     "alloc",
