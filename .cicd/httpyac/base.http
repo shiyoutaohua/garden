@@ -1,7 +1,11 @@
 @host = http://localhost:7500
+# @host = http://localhost:7600
 
 ###
 GET {{host}}/
 
 ###
 GET {{host}}/healthz
+
+###
+GET {{host}}/problem

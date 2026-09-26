@@ -4,7 +4,10 @@ use axum::{
     http::HeaderMap,
     response::IntoResponse,
 };
-use garden_core::model::result::{base::BizResult, metrics::AppMetrics};
+use garden_core::{
+    model::result::{base::BizResult, metrics::AppMetrics},
+    rfc9457::Rfc9457,
+};
 use std::collections::HashMap;
 use tracing::debug;
 
@@ -12,7 +15,7 @@ pub(crate) struct BaseHandler;
 impl BaseHandler {
     pub(crate) async fn greet() -> BizResult<String> {
         debug!("f[greet] begin");
-        let app_name = "daisy";
+        let app_name = crate::cfg::app::name();
         let reply = format!("Hey from {}", app_name);
         debug!("f[greet] end");
         BizResult::ok(reply)
@@ -25,6 +28,10 @@ impl BaseHandler {
             start_iso: String::new(),
         };
         Json(metrics)
+    }
+
+    pub(crate) async fn problem() -> impl IntoResponse {
+        Rfc9457::Unknow
     }
 
     pub(crate) async fn path(PathVar(key): PathVar<String>) -> impl IntoResponse {
