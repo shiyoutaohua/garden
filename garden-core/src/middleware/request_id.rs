@@ -1,4 +1,4 @@
-use crate::{constant::http::HEADER_REQUEST_ID, problem::biz::BizProblem, util::id::UlidGenerator};
+use crate::{constant::http::HEADER_REQUEST_ID, problem::BizProblem, util::id::UlidGenerator};
 use axum::{http::HeaderValue, middleware::Next, response::Response};
 use tracing::{Instrument, debug, info_span};
 

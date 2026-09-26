@@ -1,24 +1,20 @@
 use axum::{
     Json,
     extract::{Path as PathVar, Query},
-    http::HeaderMap,
     response::IntoResponse,
 };
-use garden_core::{
-    model::result::{base::BizResult, metrics::AppMetrics},
-    rfc9457::Rfc9457,
-};
+use garden_core::{model::result::metrics::AppMetrics, problem::BizProblem};
 use std::collections::HashMap;
 use tracing::debug;
 
 pub(crate) struct BaseHandler;
 impl BaseHandler {
-    pub(crate) async fn greet() -> BizResult<String> {
+    pub(crate) async fn greet() -> impl IntoResponse {
         debug!("f[greet] begin");
         let app_name = crate::cfg::app::name();
         let reply = format!("Hey from {}", app_name);
         debug!("f[greet] end");
-        BizResult::ok(reply)
+        reply
     }
 
     pub(crate) async fn healthz() -> impl IntoResponse {
@@ -31,7 +27,7 @@ impl BaseHandler {
     }
 
     pub(crate) async fn problem() -> impl IntoResponse {
-        Rfc9457::Unknow
+        BizProblem::Unknow
     }
 
     pub(crate) async fn path(PathVar(key): PathVar<String>) -> impl IntoResponse {
@@ -40,13 +36,5 @@ impl BaseHandler {
 
     pub(crate) async fn query(Query(map): Query<HashMap<String, String>>) -> impl IntoResponse {
         format!("{:?}", map)
-    }
-
-    pub(crate) async fn headers(header_map: HeaderMap) -> impl IntoResponse {
-        BizResult::ok(format!("{:?}", header_map))
-    }
-
-    pub(crate) async fn post_text(body: String) -> impl IntoResponse {
-        BizResult::ok(body)
     }
 }

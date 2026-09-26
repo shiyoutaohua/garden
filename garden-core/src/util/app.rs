@@ -1,4 +1,4 @@
-use crate::problem::biz::BizProblem;
+use crate::problem::BizProblem;
 use axum::{
     Router,
     body::Body,
@@ -48,5 +48,5 @@ pub fn handler_panic(err: Box<dyn Any + Send + 'static>) -> Response<Body> {
     } else {
         "hava no panic message".to_string()
     };
-    BizProblem::UNKNOWN.with_msg(msg).into_response()
+    BizProblem::Unknow.with_msg(msg).into_response()
 }
