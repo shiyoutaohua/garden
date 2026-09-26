@@ -31,7 +31,7 @@ impl BaseHandler {
     }
 
     pub(crate) async fn problem() -> impl IntoResponse {
-        Rfc9457::Unknow
+        Rfc9457::Unknow.concat_msg("哈哈哈")
     }
 
     pub(crate) async fn path(PathVar(key): PathVar<String>) -> impl IntoResponse {

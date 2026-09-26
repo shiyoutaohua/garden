@@ -8,7 +8,7 @@ use serde::{Deserialize, Serialize};
 use std::borrow::Cow;
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
-pub struct ProblemBody {
+struct ProblemBody {
     status: u16,
     kind: Cow<'static, str>,
     msg: Cow<'static, str>,
@@ -42,7 +42,7 @@ pub enum Rfc9457 {
 }
 
 impl Rfc9457 {
-    pub fn body(&self) -> ProblemBody {
+    fn body(&self) -> ProblemBody {
         match self {
             Rfc9457::Unknow => ProblemBody {
                 status: StatusCode::INTERNAL_SERVER_ERROR.as_u16(),
@@ -161,12 +161,30 @@ impl Rfc9457 {
             },
         }
     }
+
+    pub fn with_msg(self, msg: impl Into<String>) -> impl IntoResponse {
+        ProblemBody {
+            msg: Cow::Owned(msg.into()),
+            ..self.body()
+        }
+    }
+
+    pub fn concat_msg(self, suffix: impl Into<String>) -> impl IntoResponse {
+        let mut pb = self.body();
+        pb.msg = Cow::Owned(format!("{}; {}", pb.msg, suffix.into()));
+        pb
+    }
 }
 
 impl IntoResponse for Rfc9457 {
     fn into_response(self) -> Response {
-        let body = self.body();
-        let status = StatusCode::from_u16(body.status).unwrap_or(StatusCode::INTERNAL_SERVER_ERROR);
-        (status, [(CONTENT_TYPE, "application/problem+json")], Json(body)).into_response()
+        self.body().into_response()
+    }
+}
+
+impl IntoResponse for ProblemBody {
+    fn into_response(self) -> Response {
+        let status = StatusCode::from_u16(self.status).unwrap_or(StatusCode::INTERNAL_SERVER_ERROR);
+        (status, [(CONTENT_TYPE, "application/problem+json")], Json(self)).into_response()
     }
 }
