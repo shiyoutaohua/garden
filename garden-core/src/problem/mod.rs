@@ -1,4 +1,4 @@
-//!  Rfc9457
+//! Inspired by rfc9457
 use axum::{
     Json,
     http::{StatusCode, header::CONTENT_TYPE},

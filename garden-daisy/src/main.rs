@@ -61,11 +61,11 @@ pub async fn init() {
         .fallback(app::handler_404)
         .layer(
             ServiceBuilder::new()
-                .layer(CatchPanicLayer::custom(handler_panic))
                 .layer(middleware::from_fn(ensure_request_id))
                 .layer(TraceLayer::new_for_http().make_span_with(|_: &axum::http::Request<_>| Span::current()))
-                .layer(cors_layer.clone())
                 .layer(PropagateRequestIdLayer::x_request_id())
+                .layer(cors_layer.clone())
+                .layer(CatchPanicLayer::custom(handler_panic))
                 .layer(TimeoutLayer::with_status_code(
                     StatusCode::REQUEST_TIMEOUT,
                     Duration::from_secs(30),
