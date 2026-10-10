@@ -3,7 +3,7 @@ use axum::{
     extract::{Path as PathVar, Query},
     response::IntoResponse,
 };
-use garden_core::{model::result::metrics::AppMetrics, problem::BizProblem};
+use garden_core::{model::result::metrics::AppMetrics, problem::biz::BizProblem};
 use std::collections::HashMap;
 use tracing::debug;
 
@@ -27,7 +27,7 @@ impl BaseHandler {
     }
 
     pub(crate) async fn problem() -> impl IntoResponse {
-        BizProblem::Unknow
+        BizProblem::UNKNOW
     }
 
     pub(crate) async fn path(PathVar(key): PathVar<String>) -> impl IntoResponse {
